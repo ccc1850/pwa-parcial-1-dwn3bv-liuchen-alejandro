@@ -45,6 +45,8 @@ const LoadGames = async () => {
             <a href="index.html" class="btn btn-primary">Reload</a>
         </div>
         `;
+        let h1 = document.querySelector('.hh1');
+        h1.style.display = 'none';
         return;
     }
 
