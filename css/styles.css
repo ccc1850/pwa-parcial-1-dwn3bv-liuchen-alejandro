@@ -1,0 +1,270 @@
+body{
+    background-color: #eaebed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+}
+.red-text{
+    color: #ea354b;
+}
+
+/* NOTIFICACIONES */
+.notification{
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: #eaebed;
+    padding: 1rem;
+    border-radius: 20px;
+    z-index: 999;
+    border: 2px solid #ea354b;
+    font-size: 1.5rem;
+}
+
+
+/* NAV */
+
+nav{
+    background-color: #ea354b;
+/*     border-bottom: #ea354b 2px inset; */
+}
+
+nav a:hover{
+    color: #eaebed;
+}
+
+.nav-link{
+    color: white;
+}
+
+#nav-logo{
+    width: 15rem;
+}
+
+.navbar-toggler{
+    position: absolute;
+    right: 2rem;
+}
+
+
+/* SECCION CARRITO */
+#cart{
+
+    z-index: 999;
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    padding-top: 25vh;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.467);
+}
+
+#cartBtn{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    background-color: #ea354b;
+    color: white;
+    border-radius: 20px;
+    border: 2px solid #ea354b;
+    font-size: 1.5rem;
+}
+
+#inner-cart{
+    background-color: #eaebed;
+    border-radius: 20px;
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    border: 2px solid #ea354b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cart-items{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+#cart-total{
+    font-size: 1.5rem;
+}
+
+#cart-close{
+    background-color: #ea354b;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+#clear-cart{
+    margin-bottom: 1rem;
+}
+
+
+/* SECCION JUEGOS */
+.hh1{
+    margin: 2rem;
+}
+
+.card-img{
+    padding: 1rem;
+    border-radius: 40px;
+}
+
+.card-body{
+min-height: 45vh;
+}
+
+.card-text{
+    height: 50%;
+}
+
+.card-price{
+    font-size: 1.5rem;
+}
+
+.green{
+    color: green;
+}
+
+
+
+
+
+/* SECCION DETALLE JUEGOS */
+.back-btn{
+    margin-top: 2rem;
+    margin-left: 2rem;
+}
+
+.back-btn a{
+    font-size: 1.5rem;
+}
+
+.details{
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+}
+
+.det-img{
+    border-radius: 20px;
+    border: 1px solid #ea354b;
+}
+
+
+
+.details h1{
+    color: #ea354b;
+}
+
+.details a{
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.det-text{
+    font-size: 1.5rem;
+}
+
+.det-price{
+    font-size: 2rem;
+}
+
+.details button{
+    font-size: 2rem;
+}
+
+/* SECCION COMENTARIOS */
+.form{
+    display: flex;
+    justify-content: center;
+}
+
+#commentForm{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    align-items: center;
+}
+
+#commentForm label{
+    font-size: 1.5rem;
+}
+
+#commentForm input{
+    width: 100%;
+    height: 2rem;
+    border-radius: 20px;
+    border: 1px solid #ea354b;
+    padding: 1.5rem;
+    font-size: 1.5rem;
+}
+
+#commentForm textarea{
+    width: 100%;
+    height: 10rem;
+    border-radius: 20px;
+    border: 1px solid #ea354b;
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+.submit-btn{
+    margin-top: 1rem;
+    width: 50%;
+    font-size: 1.5rem;
+}
+
+
+.comments{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.comment{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0.5rem 2rem;
+    padding: 1rem;
+    border: 2px solid #ea354b;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.comment p{
+    height: fit-content;
+    max-width: 100%;
+    word-break: break-all;
+    white-space: normal;
+}
+
+/* SECCION FOOTER */
+footer{
+    margin-top: auto;
+    height: 4rem;
+    background-color: rgb(37, 37, 37);
+    border-top: #ea354b 2px outset;
+}

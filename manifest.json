@@ -1,0 +1,26 @@
+{
+    "name": "DV Game Store",
+    "short_name": "DVGS",
+    "description": "Service worker for DV Game Store",
+    "version": "1.0",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#eaebed",
+    "theme_color": "#ea354b",
+    "icons": [
+      {
+        "src": "img/icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "img/icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "serviceworker": {
+      "src": "service-worker.js",
+      "scope": "/"
+    }
+  }
