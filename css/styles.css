@@ -55,69 +55,24 @@ nav a:hover{
 
 
 /* SECCION CARRITO */
-#cart{
-
-    z-index: 999;
+.overlay{
     position: fixed;
-    margin-left: auto;
-    margin-right: auto;
+    top: 0;
     left: 0;
-    right: 0;
-    padding-top: 25vh;
-    text-align: center;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.467);
-}
-
-#cartBtn{
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 999;
-    background-color: #ea354b;
-    color: white;
-    border-radius: 20px;
-    border: 2px solid #ea354b;
-    font-size: 1.5rem;
-}
-
-#inner-cart{
-    background-color: #eaebed;
-    border-radius: 20px;
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 2rem;
-    border: 2px solid #ea354b;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
-.cart-items{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    list-style: none;
-    margin-bottom: 1rem;
-}
-
-#cart-total{
-    font-size: 1.5rem;
-}
-
-#cart-close{
-    background-color: #ea354b;
-    color: white;
-    margin-bottom: 2rem;
-}
-
-#clear-cart{
-    margin-bottom: 1rem;
-}
+.cart-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+  }
 
 
 /* SECCION JUEGOS */
@@ -128,6 +83,8 @@ nav a:hover{
 .card-img{
     padding: 1rem;
     border-radius: 40px;
+    width: 382px;
+    height: 573px;
 }
 
 .card-body{
@@ -151,14 +108,7 @@ min-height: 45vh;
 
 
 /* SECCION DETALLE JUEGOS */
-.back-btn{
-    margin-top: 2rem;
-    margin-left: 2rem;
-}
 
-.back-btn a{
-    font-size: 1.5rem;
-}
 
 .details{
     width: 50%;
@@ -167,10 +117,7 @@ min-height: 45vh;
     padding: 2rem;
 }
 
-.det-img{
-    border-radius: 20px;
-    border: 1px solid #ea354b;
-}
+
 
 
 
@@ -195,70 +142,38 @@ min-height: 45vh;
     font-size: 2rem;
 }
 
-/* SECCION COMENTARIOS */
-.form{
-    display: flex;
-    justify-content: center;
+/* SECCION DETALLE JUEGOS */
+
+.back-btn{
+    margin-top: 2rem;
+    margin-left: 2rem;
 }
 
-#commentForm{
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-    align-items: center;
-}
-
-#commentForm label{
-    font-size: 1.5rem;
-}
-
-#commentForm input{
-    width: 100%;
-    height: 2rem;
-    border-radius: 20px;
-    border: 1px solid #ea354b;
-    padding: 1.5rem;
-    font-size: 1.5rem;
-}
-
-#commentForm textarea{
-    width: 100%;
-    height: 10rem;
-    border-radius: 20px;
-    border: 1px solid #ea354b;
-    padding: 1rem;
-    font-size: 1rem;
-}
-
-.submit-btn{
-    margin-top: 1rem;
-    width: 50%;
+.back-btn a{
     font-size: 1.5rem;
 }
 
 
-.comments{
+#game-det-container{
     display: flex;
-    flex-direction: column;
-}
-
-
-.comment{
-    display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
-    margin: 0.5rem 2rem;
-    padding: 1rem;
-    border: 2px solid #ea354b;
-    border-radius: 10px;
-    height: fit-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    text-align: center;
 }
 
-.comment p{
-    height: fit-content;
-    max-width: 100%;
-    word-break: break-all;
-    white-space: normal;
+.det-img{
+    border-radius: 20px;
+    border: 1px solid #ea354b;
+    width: 382px;
+}
+
+.det-body{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 60%;
 }
 
 /* SECCION FOOTER */

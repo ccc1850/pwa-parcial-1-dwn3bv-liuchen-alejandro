@@ -15,13 +15,9 @@ if ('serviceWorker' in navigator) {
 
 
 /* DEFINIR LA API DE LA LISTA DE JUEGOS */
-let url = 'https://dvgame.store/wp-json/wc/v2/products';
+let url = 'https://www.dvgame.store/wp-json/wc/v3/products?per_page=100&consumer_key=ck_abf915fddd29f466658601d0f0651dfc25f34928&consumer_secret=cs_e0a0f5526c5813d8a02751b412010541c65a9a11';
 let options = {
-	method: 'GET',
-	headers: {
-		'consumer_key': 'ck_abf915fddd29f466658601d0f0651dfc25f34928',
-		'consumer_secret': 'cs_e0a0f5526c5813d8a02751b412010541c65a9a11'
-	}
+	method: 'GET'
 };
 
 /* ARRAY EN EL QUE SE GUARDARAN LOS JUEGOS DESEADOS */
@@ -56,20 +52,53 @@ const LoadGames = async () => {
 
 
     gameList.forEach(game => {
-        gameContainer.innerHTML += `
-        <div class="card col-xxl-4 col-md-6">
-            <img src="${game.images.src}" class="card-img" alt="${game.name}">
-            <div class="card-body">
-                <h5 class="card-title">${game.name}</h5>
-                <p class="card-text">${game.description}</p>
-                <p class="card-price">Price: <span class="green">$${game.price}</span></p>
-                <a href="views/product_detail.html?id=${game.id}" class="btn btn-primary">See More</a>
-                <button class="btn btn-primary" onclick="CartLocalStorage('${game.name}')">Add to Cart</button>
-            </div>
-        </div>
-        `;
-    }
-    );
+
+        const shortDesc = game.description.slice(0, 100) + '...'
+
+        const card = document.createElement('div');
+        card.classList.add('card', 'col-xxl-4', 'col-md-6');
+      
+        const image = document.createElement('img');
+        image.classList.add('card-img');
+        image.src = game.images[0].src;
+        image.alt = game.name;
+        card.appendChild(image);
+      
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        card.appendChild(cardBody);
+      
+        const title = document.createElement('h5');
+        title.classList.add('card-title');
+        title.textContent = game.name;
+        cardBody.appendChild(title);
+      
+        const description = document.createElement('div');
+        description.classList.add('card-text');
+        description.innerHTML = shortDesc;
+        cardBody.appendChild(description);
+      
+        const price = document.createElement('p');
+        price.classList.add('card-price');
+        price.innerHTML = `Price: <span class="green">$${game.price}</span>`;
+        cardBody.appendChild(price);
+      
+        const seeMoreLink = document.createElement('a');
+        seeMoreLink.href = `views/product_detail.html?id=${game.id}`;
+        seeMoreLink.classList.add('btn', 'btn-primary');
+        seeMoreLink.textContent = 'See More';
+        cardBody.appendChild(seeMoreLink);
+      
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.classList.add('btn', 'btn-primary');
+        addToCartBtn.textContent = 'Add to Cart';
+        addToCartBtn.addEventListener('click', () => {
+          CartLocalStorage(game.name);
+        });
+        cardBody.appendChild(addToCartBtn);
+      
+        gameContainer.appendChild(card);
+      });
 
 
 }

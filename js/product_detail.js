@@ -11,6 +11,9 @@ if ('serviceWorker' in navigator) {
     });
   }
 
+  const testproduct = () => {
+    console.log('test');
+  }
 
 /* CONSEGUIR EL ID DEL ITEM DESDE LA URL */
 const producto = new URLSearchParams(window.location.search);
@@ -18,14 +21,12 @@ let itemId = producto.get('id');
 itemId = parseInt(itemId);
 
 /* DEFINIR LA API DEL DETALLE DE JUEGO ESPECIFICO */
-let url = `https://free-to-play-games-database.p.rapidapi.com/api/game?id=${itemId}`;
+let url = `https://www.dvgame.store/wp-json/wc/v3/products/${itemId}?consumer_key=ck_abf915fddd29f466658601d0f0651dfc25f34928&consumer_secret=cs_e0a0f5526c5813d8a02751b412010541c65a9a11`;
 let options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': 'c4f9300751msh3ab7447fd37a570p1f7429jsn47187edf1fb6',
-		'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
-	}
+	method: 'GET'
 };
+
+
 
 /* FUNCION QUE MUESTRA LOS DATOS DEL JUEGO SELECCIONADO */
 const GameDetail = async () => {
@@ -40,293 +41,148 @@ const GameDetail = async () => {
             <a href="index.html" class="btn btn-primary">Reload</a>
         </div>
         `;
-        return;
+
+      return;
     }
 
     let game = await response.json();
-
-    let prices = await fetch('../data/prices.json');
-
-    if (!prices.ok) {
-      gameContainer.innerHTML += `
-      <div class="col-12 text-center">
-          <h1>An error ocurred</h1>
-          <a href="index.html" class="btn btn-primary">Reload</a>
-      </div>
-      `;
-      return;
-    }
-
-    let pricesJson = await prices.json();
-
-    let flag = false;
-
-    pricesJson.forEach(price => {
-      if (price.id == game.id) {
-        game.price = price.price;
-        flag = true;
-      }
-    });
-
-    if (!flag) {
-      gameContainer.innerHTML += `
-      <div class="col-12 text-center">
-          <h1>This Game isn't available in our store</h1>
-          <a href="index.html" class="btn btn-primary">Back to Home</a>
-      </div>
-      `;
-
-      let commentContainer = document.getElementById('comment-container');
-      commentContainer.innerHTML = '';
-
-
-      return;
-    }
-
         
 
 
-    gameContainer.innerHTML += `
-    <div class="details col-8 d-flex flex-column text-center">
-        <img src="${game.thumbnail}" class="det-img" alt="${game.title}">
-        <div class="det-body">
-            <h1 class="det-title">${game.title}</h1>
-            <p class="det-text">${game.short_description}</p>
-            <p class="det-price">Price: <span class="green">$${game.price}</span></p>
-            <a href="${game.game_url}" class="btn btn-primary">Game Website</a> </br>
-            <button class="btn btn-primary" onclick="CartLocalStorage('${game.title}')">Add to Cart</button>
-        </div>
-    </div>
-    `;
+    const detailsContainer = document.querySelector('#game-det-container');
+    
+    const image = document.createElement('img');
+    image.classList.add('det-img');
+    image.src = game.images[0].src;
+    image.alt = game.name;
+    detailsContainer.appendChild(image);
+    
+    const detBody = document.createElement('div');
+    detBody.classList.add('det-body');
+    detailsContainer.appendChild(detBody);
+    
+    const title = document.createElement('h1');
+    title.classList.add('det-title');
+    title.textContent = game.name;
+    detBody.appendChild(title);
+    
+    const description = document.createElement('div');
+    description.classList.add('det-text');
+    description.innerHTML = game.description;
+    detBody.appendChild(description);
+    
+    const price = document.createElement('p');
+    price.classList.add('det-price');
+    price.innerHTML = `Price: <span class="green">$${game.price}</span>`;
+    detBody.appendChild(price);
 
-
-
+    
+    const addToCartBtn = document.createElement('button');
+    addToCartBtn.classList.add('btn', 'btn-primary');
+    addToCartBtn.textContent = 'Add to Cart';
+    detailsForCart = [game.name, game.price];
+    addToCartBtn.addEventListener('click', () => {
+      AddToCart(detailsForCart);
+    });
+    detBody.appendChild(addToCartBtn);
 }
 
 GameDetail();
 
-/* FUNCION QUE CONSTRUYE EL FORMULARIO PARA COMENTARIOS */
-const CommentForm = () => {
-    let commentContainer = document.getElementById('comment-container');
-    let formDiv = document.createElement('div');
-    formDiv.classList.add('form');
-    commentContainer.appendChild(formDiv);
-
-    formDiv.innerHTML += `
-    <form id="commentForm">
-
-    <h2>Add a comment</h2>
-
-    <label for="author">Your Name:</label>
-    <input type="text" id="author" name="author" required>
-
-    <label for="comment">Comment:</label>
-    <textarea id="comment" name="comment"  required></textarea>
-
-    <button type="button" class="btn btn-secondary submit-btn" onclick="AddComment()">Submit</button>
-    </form>
-  `;
-}
-CommentForm();
-
-/* FUNCION QUE MUESTRA LOS COMENTARIOS EN LA PAGINA DE DETALLES */
-const Comments = () => {
-    let comments = JSON.parse(localStorage.getItem('comments')) ? JSON.parse(localStorage.getItem('comments')) : {};
-
-    let commentContainer = document.getElementById('comment-container');
-
-    let commentsDiv = document.createElement('div');
-    commentsDiv.classList.add('comments');
-    commentContainer.appendChild(commentsDiv);
-
-    let h2 = document.createElement('h2');
-    h2.innerHTML = 'Comments';
-    h2.classList.add('text-center');
-    commentsDiv.appendChild(h2);
-
-    if (comments.games) {
-        for (let game of comments.games) {
-          if (game.id == itemId) {
-            for (let comment of game.comments) {
-              let commentDiv = document.createElement('div');
-              commentDiv.classList.add('comment');
-              let createAuthor = document.createElement('h3');
-              createAuthor.innerHTML = `Author: ${comment.author}`;
-              commentDiv.appendChild(createAuthor);
-              let createComment = document.createElement('p');
-              createComment.innerHTML = comment.comment;
-              commentDiv.appendChild(createComment);
-              commentsDiv.appendChild(commentDiv);
-            }
-          }
-        }
-      }
-
-
-}
-
-Comments();
-
-/* FUNCION QUE AGREGA NUEVOS COMENTARIOS */
-const AddComment = () => {
-
-    let comments = JSON.parse(localStorage.getItem('comments')) ? JSON.parse(localStorage.getItem('comments')) : {};
-    let author = document.getElementById('author').value;
-    let comment = document.getElementById('comment').value;
-    let newComment = {
-        "author": author,
-        "comment": comment
-    };
-
-    if (comments.games) {
-        let foundGame = false;
-        for (let game of comments.games) {
-          if (game.id == itemId) {
-            game.comments.push(newComment);
-            foundGame = true;
-            break;
-          }
-        }
-        if (!foundGame) {
-          let newGame = {
-            id: itemId,
-            comments: [newComment]
-          };
-          comments.games.push(newGame);
-        }
-      } else {
-        let newGame = {
-          id: itemId,
-          comments: [newComment]
-        };
-        comments.games = [newGame];
-      }
-
-    localStorage.setItem('comments', JSON.stringify(comments));
-    let commentsDiv = document.querySelector('.comments');
-    commentsDiv.remove();
-    Comments();
-    document.getElementById('commentForm').reset();
-
-
-}
-
-
-
-/* FUNCIONES CARRITO */
-
-/* FUNCION QUE CARGA LOS ITEMS GUARDADOS EN EL CARRITO DE LOCAL STORAGE AL CARRITO */
-const LoadCartItems = () => {
-    let items = document.getElementsByClassName('cart-items')[0]; 
-    let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    
-    if (cart.length > 0) {
-        let itemList = '';
-        cart.forEach(item => {
-            itemList += `<li>${item}</li>`;
-        });
-        items.innerHTML = itemList;
-    } else {
-        items.innerHTML = `<li>No items in cart</li>`;
+const RemoveFromCart = (game) => {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const index = cart.findIndex(item => item[0] === game);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    const cartList = document.querySelector('.cart-list');
+    cartList.innerHTML = '';
+    if(cart.length === 0) {
+      const emptyCart = document.createElement("p");
+      emptyCart.className = "empty-cart";
+      emptyCart.textContent = "Your cart is empty";
+      cartList.appendChild(emptyCart);
+      return
     }
-}
+    cart.forEach(game => {
 
-/* FUNCION QUE MUESTRA EL CARRITO Y ACTUALIZA EL PRECIO TOTAL */
-const ShowCart = async () => {
-    let cart = document.getElementById('cart');
-    cart.addEventListener('click', HideCart);
-    let innercart = document.getElementById('inner-cart');
-    innercart.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-    if(cart.style.display == 'none'){
-        LoadCartItems();
-        cart.style.display = 'block';
-    }
-    else{
-        cart.style.display = 'none';
-    }
-
-    let cartTotal = document.getElementById('cart-total');
-    let response = await fetch('../data/prices.json');
-
-    if (!response.ok) {
-        cartTotal.innerHTML = `
-        <p>An error ocurred loading the prices</p>
-        <a href="index.html" class="btn btn-primary">Reload</a>
-        `;
-        return;
-    }
-    let prices = await response.json();
-    let cartItems = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    let total = 0;
-    cartItems.forEach(item => {
-        prices.forEach(price => {
-            if(item == price.title){
-                price.price = parseInt(price.price);
-                total = price.price + total;
-            }
-        });
+      const cartItem = document.createElement("div");
+      cartItem.className = "cart-item";
+      cartItem.innerHTML = `
+        <p class="cart-item-title">${game[0]}</p>
+        <p class="cart-item-price">$${game[1]}</p>
+        <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remove</button>
+      `;
+      cartList.appendChild(cartItem);
     }
     );
-    cartTotal.innerHTML = `
-    <p>Total: <span class="green">$${total}</span></p>
-    `;
+  }
 }
 
-/* FUNCION QUE OCULTA EL CARRITO */
-const HideCart = () => {
-    let cart = document.getElementById('cart');
-    cart.style.display = 'none';
-}
+const CartOverlay = () => {
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
 
-/* FUNCION PARA BORRAR ITEMS DEL CARRITO */
-const ClearCart = () => {
-    localStorage.removeItem('cart');
-    LoadCartItems();
-    let cartTotal = document.getElementById('cart-total');
-    cartTotal.innerHTML = `
-    <p>Total: $0</p>
-    `;
+  const cartContent = document.createElement("div");
+  cartContent.className = "cart-content";
 
-}
+  const cartTitle = document.createElement("p");
+  cartTitle.className = "cart-title";
+  cartTitle.textContent = "Your Cart";
+  cartContent.appendChild(cartTitle);
 
-/* FUNCION QUE AGREGA EL ITEM SELECCIONADO Y MANDA UNA NOTIFICACION */
-const CartLocalStorage = (item) => {
-    let flag = true;
-    let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    if(cart.length > 0){
-        cart.forEach(game => {
-            if(game == item){
-                let noti = document.createElement('div');
-                noti.classList.add('notification');
-                noti.innerHTML = `
-                <p>This item is already in your cart</p>
-                `;
-                document.body.appendChild(noti);
-                setTimeout(() => {
-                    noti.remove();
-                }, 3000);
-                console.log('Item already in cart');
-                flag = false;
-                return;
-            }
-        });
+  const cartList = document.createElement("div");
+  cartList.className = "cart-list";
+  
+  let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
+  if(cart.length === 0) {
+    const emptyCart = document.createElement("p");
+    emptyCart.className = "empty-cart";
+    emptyCart.textContent = "Your cart is empty";
+    cartContent.appendChild(emptyCart);
+  } 
+  else {
+    cart.forEach(game => {
+      const cartItem = document.createElement("div");
+      cartItem.className = "cart-item";
+      cartItem.innerHTML = `
+        <p class="cart-item-title">${game[0]}</p>
+        <p class="cart-item-price">$${game[1]}</p>
+        <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remove</button>
+      `;
+      cartList.appendChild(cartItem);
+    });
+    cartContent.appendChild(cartList);
+  }
+
+  // Append the cart content to the overlay
+  overlay.appendChild(cartContent);
+
+  // Append the overlay to the body
+  document.body.appendChild(overlay);
+
+  // Add a click event listener to the overlay to hide it when clicked
+  overlay.addEventListener("click", function(event) {
+    if (event.target === overlay) {
+      overlay.style.display = "none";
     }
-    if(flag){
-        cart.push(item);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        let noti = document.createElement('div');
-        noti.classList.add('notification');
-        noti.innerHTML = `
-        <p>Item succesfully added to cart</p>
-        `;
-        document.body.appendChild(noti);
-        setTimeout(() => {
-            noti.remove();
-        }, 3000);
-        console.log('Item added to cart:', item);
-    }
+  });
+
 }
+
+
+
+/* FUNCION QUE AGREGA EL JUEGO AL CARRITO */
+const AddToCart = (detailsForCart) => {
+  let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
+  if(cart.length > 0 && cart[0][0] === detailsForCart[0]) {
+    alert('This item is already in your cart');
+    return;
+  }
+  cart.push(detailsForCart);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  CartOverlay();
+}
+
 
 
