@@ -14,16 +14,13 @@ if ('serviceWorker' in navigator) {
 
 
 
-
-
-
 /* DEFINIR LA API DE LA LISTA DE JUEGOS */
-let url = 'https://free-to-play-games-database.p.rapidapi.com/api/games?platform=pc';
+let url = 'https://dvgame.store/wp-json/wc/v2/products';
 let options = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': 'c4f9300751msh3ab7447fd37a570p1f7429jsn47187edf1fb6',
-		'X-RapidAPI-Host': 'free-to-play-games-database.p.rapidapi.com'
+		'consumer_key': 'ck_abf915fddd29f466658601d0f0651dfc25f34928',
+		'consumer_secret': 'cs_e0a0f5526c5813d8a02751b412010541c65a9a11'
 	}
 };
 
@@ -34,11 +31,9 @@ let gameList = [];
 /* FUNCION QUE CONSIGUE JUEGOS DE LA API Y LOS MUESTRA EN LA PAGINA */
 const LoadGames = async () => {
     let response = await fetch(url, options);
-    let priceResponse = await fetch('data/prices.json');
-
     let gameContainer = document.getElementById('game-container');
 
-    if (!response.ok || !priceResponse.ok) {
+    if (!response.ok) {
         gameContainer.innerHTML += `
         <div class="col-12 text-center">
             <h1>An error ocurred</h1>
@@ -51,21 +46,10 @@ const LoadGames = async () => {
     }
 
     let result = await response.json();
-    let prices = await priceResponse.json();
 
 
     let games = result.map(game => {
-        if(game.publisher == 'Activision Blizzard' || game.publisher == 'Electronic Arts' || game.publisher == 'Ubisoft' || game.publisher == 'Valve'){
             gameList.push(game);
-        }
-    });
-
-    let precios = prices.map(precio => {
-        gameList.forEach(game => {
-            if(game.id == precio.id){
-                game.price = precio.price;
-            }
-        });
     });
 
 
@@ -74,13 +58,13 @@ const LoadGames = async () => {
     gameList.forEach(game => {
         gameContainer.innerHTML += `
         <div class="card col-xxl-4 col-md-6">
-            <img src="${game.thumbnail}" class="card-img" alt="${game.title}">
+            <img src="${game.images.src}" class="card-img" alt="${game.name}">
             <div class="card-body">
-                <h5 class="card-title">${game.title}</h5>
-                <p class="card-text">${game.short_description}</p>
+                <h5 class="card-title">${game.name}</h5>
+                <p class="card-text">${game.description}</p>
                 <p class="card-price">Price: <span class="green">$${game.price}</span></p>
                 <a href="views/product_detail.html?id=${game.id}" class="btn btn-primary">See More</a>
-                <button class="btn btn-primary" onclick="CartLocalStorage('${game.title}')">Add to Cart</button>
+                <button class="btn btn-primary" onclick="CartLocalStorage('${game.name}')">Add to Cart</button>
             </div>
         </div>
         `;
@@ -129,27 +113,9 @@ const ShowCart = async () => {
     }
 
     let cartTotal = document.getElementById('cart-total');
-    let response = await fetch('data/prices.json');
 
-    if (!response.ok) {
-        cartTotal.innerHTML = `
-        <p>An error ocurred loading the prices</p>
-        <a href="index.html" class="btn btn-primary">Reload</a>
-        `;
-        return;
-    }
-    let prices = await response.json();
     let cartItems = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
     let total = 0;
-    cartItems.forEach(item => {
-        prices.forEach(price => {
-            if(item == price.title){
-                price.price = parseInt(price.price);
-                total = price.price + total;
-            }
-        });
-    }
-    );
     cartTotal.innerHTML = `
     <p>Total: <span class="green">$${total}</span></p>
     `;
