@@ -4,7 +4,7 @@ window.addEventListener('offline', updateHeaderColor);
 
 function updateHeaderColor() {
     var online = navigator.onLine;
-    var header = document.querySelector('header');
+    var header = document.querySelector('.navbar');
     
     if (online) {
         header.style.backgroundColor = '#ea354b'; // Online color
