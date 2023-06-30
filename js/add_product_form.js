@@ -1,3 +1,5 @@
+
+/* VALIDADOR DE FORM Y ENVIO DE DATOS AL SERVIDOR  */
 document.getElementById('productForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
