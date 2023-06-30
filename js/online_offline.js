@@ -2,6 +2,7 @@ window.addEventListener('online', updateHeaderColor);
 window.addEventListener('offline', updateHeaderColor);
 
 
+
 function updateHeaderColor() {
     var online = navigator.onLine;
     var header = document.querySelector('.navbar');
@@ -12,3 +13,5 @@ function updateHeaderColor() {
         header.style.backgroundColor = 'black'; // Offline color
     }
 }
+
+updateHeaderColor();
