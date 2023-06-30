@@ -1,5 +1,7 @@
 /* FUNCIONES CARRITO */
 
+
+/* ACTUALIZADOR DEL TOTAL DE LOS ITEMS AGREGADOS */
 const UpdateCartTotal = () => {
     let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
     let price = 0;
@@ -10,7 +12,7 @@ const UpdateCartTotal = () => {
     cartTotal.innerHTML = `$${price}`;
     };
 
-
+/* REMUEVE LOS ITEMS DEL CARRITO Y ACTUALIZA LOS PRECIOS */
 const RemoveFromCart = (game) => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const index = cart.findIndex(item => item[0] === game);
@@ -41,7 +43,7 @@ const RemoveFromCart = (game) => {
     UpdateCartTotal();
   };
   
-  
+/* MUESTRA EL OVERLAY DEL CARRITO */
   const CartOverlay = () => {
     const overlay = document.createElement("div");
     overlay.className = "overlay";

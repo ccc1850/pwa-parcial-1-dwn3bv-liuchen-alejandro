@@ -1,15 +1,8 @@
+
+/* PREGUNTARLE AL USUARIO SI QUIERE HABILITAR NOTIFICACIONES */
 if(window.Notification && Notification.permission !== "denied") {
     setTimeout('Notification.requestPermission()', 5000);
 }
-
-
-
-
-
-
-
-
-
 
 
 /* DEFINIR LA API DE LA LISTA DE JUEGOS */
@@ -24,95 +17,89 @@ let gameList = [];
 
 /* FUNCION QUE CONSIGUE JUEGOS DE LA API Y LOS MUESTRA EN LA PAGINA */
 const LoadGames = async () => {
-    let response = await fetch(url, options);
-    let gameContainer = document.getElementById('game-container');
-
-    if (!response.ok) {
-        gameContainer.innerHTML += `
-        <div class="col-12 text-center">
-            <h1>Ocurrio un error cargando los juegos</h1>
-            <a href="index.html" class="btn btn-primary">Reload</a>
-        </div>
-        `;
-        let h1 = document.querySelector('.hh1');
-        h1.style.display = 'none';
-        return;
-    }
-
-    let result = await response.json();
-
-
-    let games = result.map(game => {
-            gameList.push(game);
-    });
-
-
-
-
-    gameList.forEach(game => {
-
-        const shortDesc = game.description.slice(0, 80) + '...'
-
+    try {
+      let response = await fetch(url, options);
+      let gameContainer = document.getElementById('game-container');
+  
+      let result = await response.json();
+  
+      let games = result.map(game => {
+        gameList.push(game);
+      });
+  
+      gameList.forEach(game => {
+        const shortDesc = game.description.slice(0, 80) + '...';
         const card = document.createElement('div');
         card.classList.add('card', 'col-xxl-4', 'col-md-6');
-
+  
         let imagen = '';
-
-        if(game.images.length == 0){
-            imagen = 'img/placeholder.webp';
+  
+        if (game.images.length === 0) {
+          imagen = 'img/placeholder.webp';
+        } else {
+          imagen = game.images[0].src;
         }
-        else{
-            imagen = game.images[0].src;
-        }
-      
+  
         const image = document.createElement('img');
         image.classList.add('card-img');
         image.src = imagen;
         image.alt = game.name;
         card.appendChild(image);
-      
+  
         const cardBody = document.createElement('div');
         cardBody.classList.add('card-body');
         card.appendChild(cardBody);
-      
+  
         const title = document.createElement('h5');
         title.classList.add('card-title');
         title.textContent = game.name;
         cardBody.appendChild(title);
-      
+  
         const description = document.createElement('div');
         description.classList.add('card-text');
         description.innerHTML = shortDesc;
         cardBody.appendChild(description);
-      
+  
         const price = document.createElement('p');
         price.classList.add('card-price');
         price.innerHTML = `Precio: <span class="green">$${game.price}</span>`;
         cardBody.appendChild(price);
-      
+  
         const seeMoreLink = document.createElement('a');
         seeMoreLink.href = `views/product_detail.html?id=${game.id}`;
         seeMoreLink.classList.add('btn', 'btn-primary');
         seeMoreLink.textContent = 'Ver Detalles';
         cardBody.appendChild(seeMoreLink);
-      
+  
         const addToCartBtn = document.createElement('button');
         addToCartBtn.classList.add('btn', 'btn-primary', 'add-to-cart-btn');
         addToCartBtn.textContent = 'Agregar al carrito';
-        const detailsForCart = [game.name, game.price]
+        const detailsForCart = [game.name, game.price];
         addToCartBtn.addEventListener('click', () => {
           AddToCart(detailsForCart);
         });
         cardBody.appendChild(addToCartBtn);
-      
+  
         gameContainer.appendChild(card);
       });
-
-
-}
+    } catch (error) {
+      console.error('An error occurred while loading games:', error);
+      let gameContainer = document.getElementById('game-container');
+      gameContainer.innerHTML += `
+      <div class="col-12 text-center">
+          <h1>Ocurrio un error cargando los juegos</h1>
+          <a href="index.html" class="btn btn-primary">Reload</a>
+      </div>
+    `;
+    let h1 = document.querySelector('.hh1');
+    h1.style.display = 'none';
+    return;
+    }
+  };
 
 LoadGames();
 
+/* NOTIFICACIONES DEL NAVEGADOR */
 const notification = (game) => {
     if (Notification.permission === 'granted') {
         let title = 'Agregaste un producto!';

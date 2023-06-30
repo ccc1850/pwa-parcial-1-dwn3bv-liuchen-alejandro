@@ -9,11 +9,18 @@ self.addEventListener('install', function(installation) {
                 cache.addAll([
                     './',
                     './index.html',
+                    './views/product_detail.html',
+                    './views/add_product_form.html',
                     './css/styles.css',
                     './css/bootstrap/bootstrap.css',
                     './js/script.js',
                     './js/product_detail.js',
-                    './js/bootstrap/bootstrap.js'
+                    './js/bootstrap/bootstrap.js',
+                    './js/cart.js',
+                    './js/sw_installer.js',
+                    './js/add_product_form.js',
+                    './img/logo-red.png',
+                    './img/logo.png',
 
                 ]);
             })
@@ -44,11 +51,6 @@ self.addEventListener('push', function(event) {
     var options = {
         body: 'The Message',
         icon: 'img/icon.png',
-        tag: 'my-tag',
-        actions: [
-            { action: 'yes', title: 'Si' },
-            { action: 'no', title: 'No' }
-        ]
     };
     event.waitUntil(
         self.registration.showNotification(title, options)

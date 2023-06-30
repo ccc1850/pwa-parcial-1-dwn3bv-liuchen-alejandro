@@ -8,8 +8,8 @@ document.getElementById('productForm').addEventListener('submit', function(event
     const image = document.getElementById("image").value;
 
 
-    if (name.length < 5 || name.length > 10) {
-      BootstrapAlert("El nombre debe tener entre 5 a 10 digitos", "danger");
+    if (name.length < 5 || name.length > 30) {
+      BootstrapAlert("El nombre debe tener entre 5 a 30 digitos", "danger");
       document.querySelector('#name').style.border = "1px solid red";
       setTimeout(function () {
         document.querySelector('#name').style.border = "none";
@@ -98,6 +98,8 @@ document.getElementById('productForm').addEventListener('submit', function(event
         
   });
 
+  /* CREADOR DE NOTIFICACIONES CON BOOTSTRAP */
+
   const BootstrapAlert = (message, type) =>{
     let errorDiv = document.createElement('div');
     errorDiv.classList.add('alert', 'alert-dismissible');
@@ -108,6 +110,8 @@ document.getElementById('productForm').addEventListener('submit', function(event
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
     document.getElementById('productForm').appendChild(errorDiv);
   }
+
+  /* NOTIFICACIONES DEL NAVEGADOR */
 
   const notification = (game) => {
     if (Notification.permission === 'granted') {
