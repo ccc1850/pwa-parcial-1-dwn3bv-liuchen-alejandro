@@ -76,8 +76,18 @@ nav a:hover{
 
 
 /* SECCION JUEGOS */
-.hh1{
+h1{
     margin: 2rem;
+    text-align: center;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
 }
 
 .card-img{
@@ -88,15 +98,17 @@ nav a:hover{
 }
 
 .card-body{
-min-height: 45vh;
+display: flex;
+flex-direction: column;
 }
 
-.card-text{
-    height: 50%;
-}
 
 .card-price{
     font-size: 1.5rem;
+}
+
+.add-to-cart-btn{
+    margin-top: 1rem;
 }
 
 .green{

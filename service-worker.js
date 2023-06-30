@@ -37,3 +37,20 @@ self.addEventListener('fetch', function(loader) {
             })
     );
 });
+
+self.addEventListener('push', function(event) {
+    console.log('Push message received', event);
+    var title = 'Push message';
+    var options = {
+        body: 'The Message',
+        icon: 'img/icon.png',
+        tag: 'my-tag',
+        actions: [
+            { action: 'yes', title: 'Si' },
+            { action: 'no', title: 'No' }
+        ]
+    };
+    event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
+});

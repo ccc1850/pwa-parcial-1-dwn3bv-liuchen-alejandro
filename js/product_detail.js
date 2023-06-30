@@ -80,7 +80,7 @@ const GameDetail = async () => {
     const addToCartBtn = document.createElement('button');
     addToCartBtn.classList.add('btn', 'btn-primary');
     addToCartBtn.textContent = 'Add to Cart';
-    detailsForCart = [game.name, game.price];
+    const detailsForCart = [game.name, game.price];
     addToCartBtn.addEventListener('click', () => {
       AddToCart(detailsForCart);
     });

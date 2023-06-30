@@ -1,14 +1,32 @@
+if(window.Notification && Notification.permission !== "denied") {
+    setTimeout('Notification.requestPermission()', 5000);
+}
+
+
+
+
+
+
 /* REGISTRAR EL SERVICE WORKER */
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(function() {
-          console.log('Service Worker succesfully registered');
-        })
-        .catch(function(error) {
-          console.log('Service Worker registration failed:', error);
+        var installButton = document.getElementById('install-button');
+
+        installButton.addEventListener('click', function() {
+          installButton.disabled = true;
+
+          navigator.serviceWorker.register('service-worker.js')
+            .then(function(registration) {
+              console.log('Service Worker registered with scope:', registration.scope);
+              installButton.textContent = 'Service Worker Installed';
+            })
+            .catch(function(error) {
+              console.log('Service Worker registration failed:', error);
+              installButton.textContent = 'Installation Failed';
+              installButton.disabled = false;
+            });
         });
-    });
+      });
   }
 
 
@@ -32,7 +50,7 @@ const LoadGames = async () => {
     if (!response.ok) {
         gameContainer.innerHTML += `
         <div class="col-12 text-center">
-            <h1>An error ocurred</h1>
+            <h1>Ocurrio un error cargando los juegos</h1>
             <a href="index.html" class="btn btn-primary">Reload</a>
         </div>
         `;
@@ -53,14 +71,23 @@ const LoadGames = async () => {
 
     gameList.forEach(game => {
 
-        const shortDesc = game.description.slice(0, 100) + '...'
+        const shortDesc = game.description.slice(0, 80) + '...'
 
         const card = document.createElement('div');
         card.classList.add('card', 'col-xxl-4', 'col-md-6');
+
+        let imagen = '';
+
+        if(game.images.length == 0){
+            imagen = 'img/placeholder.webp';
+        }
+        else{
+            imagen = game.images[0].src;
+        }
       
         const image = document.createElement('img');
         image.classList.add('card-img');
-        image.src = game.images[0].src;
+        image.src = imagen;
         image.alt = game.name;
         card.appendChild(image);
       
@@ -80,20 +107,21 @@ const LoadGames = async () => {
       
         const price = document.createElement('p');
         price.classList.add('card-price');
-        price.innerHTML = `Price: <span class="green">$${game.price}</span>`;
+        price.innerHTML = `Precio: <span class="green">$${game.price}</span>`;
         cardBody.appendChild(price);
       
         const seeMoreLink = document.createElement('a');
         seeMoreLink.href = `views/product_detail.html?id=${game.id}`;
         seeMoreLink.classList.add('btn', 'btn-primary');
-        seeMoreLink.textContent = 'See More';
+        seeMoreLink.textContent = 'Ver Detalles';
         cardBody.appendChild(seeMoreLink);
       
         const addToCartBtn = document.createElement('button');
-        addToCartBtn.classList.add('btn', 'btn-primary');
-        addToCartBtn.textContent = 'Add to Cart';
+        addToCartBtn.classList.add('btn', 'btn-primary', 'add-to-cart-btn');
+        addToCartBtn.textContent = 'Agregar al carrito';
+        const detailsForCart = [game.name, game.price]
         addToCartBtn.addEventListener('click', () => {
-          CartLocalStorage(game.name);
+          AddToCart(detailsForCart);
         });
         cardBody.appendChild(addToCartBtn);
       
@@ -105,112 +133,123 @@ const LoadGames = async () => {
 
 LoadGames();
 
+const notification = (game) => {
+    if (Notification.permission === 'granted') {
+        let title = 'Agregaste un producto!';
+        let body = `${game} se agregó al carrito`;
+        let notification = new Notification(title, { body });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                let title = 'Agregaste un producto!';
+                let body = `${game} se agregó al carrito`;
+                let notification = new Notification(title, { body });
+            }
+        });
+    }
+  }
+
+
 
 /* FUNCIONES CARRITO */
 
-
-/* FUNCION QUE CARGA LOS ITEMS GUARDADOS EN EL CARRITO DE LOCAL STORAGE AL CARRITO */
-const LoadCartItems = () => {
-    let items = document.getElementsByClassName('cart-items')[0]; // Select the first element with the class 'cart-items'
-    let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    
-    if (cart.length > 0) {
-        let itemList = '';
-        cart.forEach(item => {
-            itemList += `<li>${item}</li>`;
-        });
-        items.innerHTML = itemList;
-    } else {
-        items.innerHTML = `<li>No items in cart</li>`;
-    }
-}
-
-/* FUNCION QUE MUESTRA EL CARRITO Y ACTUALIZA EL PRECIO TOTAL */
-const ShowCart = async () => {
-    let cart = document.getElementById('cart');
-    cart.addEventListener('click', HideCart);
-    let innercart = document.getElementById('inner-cart');
-    innercart.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-    if(cart.style.display == 'none'){
-        LoadCartItems();
-        cart.style.display = 'block';
-    }
-    else{
-        cart.style.display = 'none';
-    }
-
-    let cartTotal = document.getElementById('cart-total');
-
-    let cartItems = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    let total = 0;
-    cartTotal.innerHTML = `
-    <p>Total: <span class="green">$${total}</span></p>
-    `;
-}
-
-/* FUNCION QUE OCULTA EL CARRITO */
-const HideCart = () => {
-    let cart = document.getElementById('cart');
-    cart.style.display = 'none';
-}
-
-
-/* FUNCION PARA BORRAR ITEMS DEL CARRITO */
-const ClearCart = () => {
-    localStorage.removeItem('cart');
-    LoadCartItems();
-    let cartTotal = document.getElementById('cart-total');
-    cartTotal.innerHTML = `
-    <p>Total: $0</p>
-    `;
-
-}
-
-
-
-/* FUNCION QUE AGREGA EL ITEM SELECCIONADO Y MANDA UNA NOTIFICACION */
-const CartLocalStorage = (item) => {
-    let flag = true;
-    let cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-    if(cart.length > 0){
+const RemoveFromCart = (game) => {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const index = cart.findIndex(item => item[0] === game);
+    if (index !== -1) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      const cartList = document.querySelector('.cart-list');
+      cartList.innerHTML = '';
+      if (cart.length === 0) {
+        const emptyCart = document.createElement("p");
+        emptyCart.className = "empty-cart";
+        emptyCart.textContent = "Your cart is empty";
+        cartList.appendChild(emptyCart);
+      } else {
         cart.forEach(game => {
-            if(game == item){
-                let noti = document.createElement('div');
-                noti.classList.add('notification');
-                noti.innerHTML = `
-                <p>This item is already in your cart</p>
-                `;
-                document.body.appendChild(noti);
-                setTimeout(() => {
-                    noti.remove();
-                }, 3000);
-                console.log('Item already in cart');
-                flag = false;
-                return;
-            }
+          const cartItem = document.createElement("div");
+          cartItem.className = "cart-item";
+          cartItem.innerHTML = `
+            <p class="cart-item-title">${game[0]}</p>
+            <p class="cart-item-price">$${game[1]}</p>
+            <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remove</button>
+          `;
+          cartList.appendChild(cartItem);
         });
+      }
     }
-    if(flag){
-        gameList.forEach(game => {
-            if(game.title == item){
-                cart.push(game.title);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                let noti = document.createElement('div');
-                noti.classList.add('notification');
-                noti.innerHTML = `
-                <p>Item succesfully added to cart</p>
-                `;
-                document.body.appendChild(noti);
-                setTimeout(() => {
-                    noti.remove();
-                }, 3000);
-                console.log('Item added to cart:', game);
-            }
-        });
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+  };
+  
+  
+  const CartOverlay = () => {
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
+  
+    const cartContent = document.createElement("div");
+    cartContent.className = "cart-content";
+  
+    const cartTitle = document.createElement("p");
+    cartTitle.className = "cart-title";
+    cartTitle.textContent = "Your Cart";
+    cartContent.appendChild(cartTitle);
+  
+    const cartList = document.createElement("div");
+    cartList.className = "cart-list";
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
+    if(cart.length === 0) {
+      const emptyCart = document.createElement("p");
+      emptyCart.className = "empty-cart";
+      emptyCart.textContent = "Your cart is empty";
+      cartContent.appendChild(emptyCart);
+    } 
+    else {
+      cart.forEach(game => {
+        const cartItem = document.createElement("div");
+        cartItem.className = "cart-item";
+        cartItem.innerHTML = `
+          <p class="cart-item-title">${game[0]}</p>
+          <p class="cart-item-price">$${game[1]}</p>
+          <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remover</button>
+        `;
+        cartList.appendChild(cartItem);
+      });
+      cartContent.appendChild(cartList);
     }
+  
+    // Append the cart content to the overlay
+    overlay.appendChild(cartContent);
+  
+    // Append the overlay to the body
+    document.body.appendChild(overlay);
+  
+    // Add a click event listener to the overlay to hide it when clicked
+    overlay.addEventListener("click", function(event) {
+      if (event.target === overlay) {
+        overlay.remove();
+      }
+    });
 
-}
-
-
+  
+  }
+  
+  
+  
+  /* FUNCION QUE AGREGA EL JUEGO AL CARRITO */
+  const AddToCart = (detailsForCart) => {
+    let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
+    if(cart.length > 0 && cart[0][0] === detailsForCart[0]) {
+      alert('This item is already in your cart');
+      return;
+    }
+    cart.push(detailsForCart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    CartOverlay();
+    notification(detailsForCart[0]);
+  }
+  
+  
+  
+  
