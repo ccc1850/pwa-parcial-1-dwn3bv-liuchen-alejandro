@@ -9,6 +9,19 @@ body{
     color: #ea354b;
 }
 
+.reminder{
+    text-align: center;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+    background-color: lightgray;
+    border-radius: 15px;
+    margin-top: 1rem;
+}
+
 /* NOTIFICACIONES */
 .notification{
     position: fixed;
