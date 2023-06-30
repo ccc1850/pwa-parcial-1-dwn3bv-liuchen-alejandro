@@ -1,5 +1,16 @@
 /* FUNCIONES CARRITO */
 
+const UpdateCartTotal = () => {
+    let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
+    let price = 0;
+    cart.forEach(game => {
+        price = price + parseInt(game[1]);
+    });
+    const cartTotal = document.querySelector('.cart-total-price');
+    cartTotal.innerHTML = `$${price}`;
+    };
+
+
 const RemoveFromCart = (game) => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const index = cart.findIndex(item => item[0] === game);
@@ -11,22 +22,23 @@ const RemoveFromCart = (game) => {
       if (cart.length === 0) {
         const emptyCart = document.createElement("p");
         emptyCart.className = "empty-cart";
-        emptyCart.textContent = "Your cart is empty";
+        emptyCart.textContent = "Tu carrito esta vacio";
         cartList.appendChild(emptyCart);
       } else {
         cart.forEach(game => {
           const cartItem = document.createElement("div");
           cartItem.className = "cart-item";
           cartItem.innerHTML = `
-            <p class="cart-item-title">${game[0]}</p>
-            <p class="cart-item-price">$${game[1]}</p>
-            <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remove</button>
+          <div class="column"><p class="cart-item-title">${game[0]}</p></div>
+          <div class="column"><p class="cart-item-price">$${game[1]}</p></div>
+          <div class="column"><button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remover</button></div>
           `;
           cartList.appendChild(cartItem);
         });
       }
     }
     cart = JSON.parse(localStorage.getItem('cart')) || [];
+    UpdateCartTotal();
   };
   
   
@@ -39,7 +51,7 @@ const RemoveFromCart = (game) => {
   
     const cartTitle = document.createElement("p");
     cartTitle.className = "cart-title";
-    cartTitle.textContent = "Your Cart";
+    cartTitle.textContent = "Tu Carrito";
     cartContent.appendChild(cartTitle);
   
     const cartList = document.createElement("div");
@@ -49,7 +61,7 @@ const RemoveFromCart = (game) => {
     if(cart.length === 0) {
       const emptyCart = document.createElement("p");
       emptyCart.className = "empty-cart";
-      emptyCart.textContent = "Your cart is empty";
+      emptyCart.textContent = "Tu carrito esta vacio";
       cartContent.appendChild(emptyCart);
     } 
     else {
@@ -57,14 +69,26 @@ const RemoveFromCart = (game) => {
         const cartItem = document.createElement("div");
         cartItem.className = "cart-item";
         cartItem.innerHTML = `
-          <p class="cart-item-title">${game[0]}</p>
-          <p class="cart-item-price">$${game[1]}</p>
-          <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remover</button>
+          <div class="column"><p class="cart-item-title">${game[0]}</p></div>
+          <div class="column"><p class="cart-item-price">$${game[1]}</p></div>
+          <div class="column"><button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remover</button></div>
         `;
         cartList.appendChild(cartItem);
       });
       cartContent.appendChild(cartList);
     }
+
+    const cartTotal = document.createElement("div");
+    cartTotal.className = "cart-total";
+    price = 0;
+    let priceTotal = cart.forEach(game => {
+        price = price + parseInt(game[1]);
+    });
+    cartTotal.innerHTML = `
+        <div class="column"><p class="cart-total-title">Total</p></div>
+        <div class="column"><p class="cart-total-price">$${price}</p></div>
+    `;
+    cartContent.appendChild(cartTotal);
   
     // Append the cart content to the overlay
     overlay.appendChild(cartContent);
@@ -87,16 +111,11 @@ const RemoveFromCart = (game) => {
   /* FUNCION QUE AGREGA EL JUEGO AL CARRITO */
   const AddToCart = (detailsForCart) => {
     let cart = JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : [];
-    if(cart.length > 0 && cart[0][0] === detailsForCart[0]) {
-      alert('This item is already in your cart');
-      return;
-    }
     cart.push(detailsForCart);
     localStorage.setItem('cart', JSON.stringify(cart));
     CartOverlay();
     notification(detailsForCart[0]);
   }
   
-  
-  
+
   

@@ -18,9 +18,12 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <ul class="navbar-nav">
         <li><a class="nav-link" href="../index.html">Home</a></li>
-        <li><a class="nav-link" href="add_product_form.html">Add Item To Shop</a></li>
-        <li><a class="nav-link" onclick="CartOverlay()">My Cart</a></li>
+        <li><a class="nav-link" href="add_product_form.html">Agregar Producto</a></li>
+        <li><a class="nav-link" onclick="CartOverlay()">Mi Carrito</a></li>
       </ul>
+      <div>
+        <button class="btn btn-primary" id="install-button">Instalar App</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -49,6 +52,7 @@
         <div class="mb-3">
           <label for="image" class="form-label">Link de imagen:</label>
           <input type="text" class="form-control" id="image" name="image">
+          <p>Si no se pone una imagen, tendra como imagen un placeholder</p>
         </div>
       
         <button type="submit" class="btn btn-primary">Subir producto a tienda</button>
@@ -70,4 +74,6 @@
 </body>
 <script src="../js/bootstrap/bootstrap.js"></script>
 <script src="../js/add_product_form.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/sw_installer.js"></script>
 </html>

@@ -50,10 +50,19 @@ const GameDetail = async () => {
 
 
     const detailsContainer = document.querySelector('#game-det-container');
+
+    let imagen = '';
+
+    if(game.images.length == 0){
+      imagen = '../img/placeholder.webp';
+    }
+    else{
+      imagen = game.images[0].src;
+    }
     
     const image = document.createElement('img');
     image.classList.add('det-img');
-    image.src = game.images[0].src;
+    image.src = imagen;
     image.alt = game.name;
     detailsContainer.appendChild(image);
     
@@ -89,35 +98,6 @@ const GameDetail = async () => {
 
 GameDetail();
 
-const RemoveFromCart = (game) => {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const index = cart.findIndex(item => item[0] === game);
-  if (index !== -1) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    const cartList = document.querySelector('.cart-list');
-    cartList.innerHTML = '';
-    if(cart.length === 0) {
-      const emptyCart = document.createElement("p");
-      emptyCart.className = "empty-cart";
-      emptyCart.textContent = "Your cart is empty";
-      cartList.appendChild(emptyCart);
-      return
-    }
-    cart.forEach(game => {
-
-      const cartItem = document.createElement("div");
-      cartItem.className = "cart-item";
-      cartItem.innerHTML = `
-        <p class="cart-item-title">${game[0]}</p>
-        <p class="cart-item-price">$${game[1]}</p>
-        <button class="btn btn-danger" onclick="RemoveFromCart('${game[0]}')">Remove</button>
-      `;
-      cartList.appendChild(cartItem);
-    }
-    );
-  }
-}
 
 
 

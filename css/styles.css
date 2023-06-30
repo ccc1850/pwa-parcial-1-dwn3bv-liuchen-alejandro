@@ -72,7 +72,51 @@ nav a:hover{
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
+    width: 40%;
+    max-height: 50%;
+    overflow-y: auto;
   }
+
+  .cart-title{
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .cart-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  .column{
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .cart-item-price{
+    color: green;
+  }
+
+  .cart-total{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+  }
+
+    .cart-total-price{
+        color: green;
+    }   
+
+.empty-cart{
+    text-align: center;
+    font-size: 1.5rem;
+}
 
 
 /* SECCION JUEGOS */
@@ -100,6 +144,7 @@ h1{
 .card-body{
 display: flex;
 flex-direction: column;
+width: 100%;
 }
 
 
@@ -113,6 +158,10 @@ flex-direction: column;
 
 .green{
     color: green;
+}
+
+.card-body a, button{
+    width: 100%;
 }
 
 

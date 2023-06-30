@@ -7,27 +7,7 @@ if(window.Notification && Notification.permission !== "denied") {
 
 
 
-/* REGISTRAR EL SERVICE WORKER */
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        var installButton = document.getElementById('install-button');
 
-        installButton.addEventListener('click', function() {
-          installButton.disabled = true;
-
-          navigator.serviceWorker.register('service-worker.js')
-            .then(function(registration) {
-              console.log('Service Worker registered with scope:', registration.scope);
-              installButton.textContent = 'Service Worker Installed';
-            })
-            .catch(function(error) {
-              console.log('Service Worker registration failed:', error);
-              installButton.textContent = 'Installation Failed';
-              installButton.disabled = false;
-            });
-        });
-      });
-  }
 
 
 
