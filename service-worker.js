@@ -50,7 +50,7 @@ self.addEventListener('push', function(event) {
     var title = 'Push message';
     var options = {
         body: 'The Message',
-        icon: 'favicon.ico',
+        icon: 'favicon-32x32.png',
     };
     event.waitUntil(
         self.registration.showNotification(title, options)
