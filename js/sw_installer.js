@@ -8,6 +8,7 @@ if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             let reminder = document.querySelector('.reminder');
             let installButton = document.getElementById('install-button');
+            reminder.style.display = 'block';
 
     
             installButton.addEventListener('click', function() {

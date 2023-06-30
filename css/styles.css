@@ -20,6 +20,7 @@ body{
     background-color: lightgray;
     border-radius: 15px;
     margin-top: 1rem;
+    display: none;
 }
 
 /* NOTIFICACIONES */
