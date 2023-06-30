@@ -1,3 +1,23 @@
+
+/* BUSCAR POR CAMBIOS DE INTERNET */
+window.addEventListener('online', updateHeaderColor);
+window.addEventListener('offline', updateHeaderColor);
+
+
+/* FUNCION PARA CAMBIAR EL COLOR DEL HEADER */
+function updateHeaderColor() {
+    var online = navigator.onLine;
+    var header = document.querySelector('.navbar');
+    
+    if (online) {
+        header.style.backgroundColor = '#ea354b'; 
+        header.style.backgroundColor = 'black'; 
+    }
+}
+
+updateHeaderColor();
+
+
 /* FUNCIONES CARRITO */
 
 
@@ -91,14 +111,10 @@ const RemoveFromCart = (game) => {
         <div class="column"><p class="cart-total-price">$${price}</p></div>
     `;
     cartContent.appendChild(cartTotal);
-  
-    // Append the cart content to the overlay
     overlay.appendChild(cartContent);
-  
-    // Append the overlay to the body
+
     document.body.appendChild(overlay);
-  
-    // Add a click event listener to the overlay to hide it when clicked
+
     overlay.addEventListener("click", function(event) {
       if (event.target === overlay) {
         overlay.remove();
@@ -118,6 +134,4 @@ const RemoveFromCart = (game) => {
     CartOverlay();
     notification(detailsForCart[0]);
   }
-  
-
   
