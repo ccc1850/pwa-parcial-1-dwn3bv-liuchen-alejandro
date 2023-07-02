@@ -3,7 +3,7 @@ Entrega de Parcial 2 de Aplicaciones Web Progresivas
 
 La aplicacion se trata sobre una tienda de videojuegos.
 
-Utiliza la API de https://www.freetogame.com/ para sacar informacion de los juegos y un archivo JSON propio para almacenar los precios de los juegos.
+Utiliza una API propia
 
 No puse la opcion para borrar o editar juegos ya que los productos principales son requeridos para otro parcial y no quiero que se borren sin querer, pero no hay problema con agregar productos
 
