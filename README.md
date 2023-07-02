@@ -1,5 +1,5 @@
-# pwa-parcial-1-dwn3bv-liuchen-alejandro
-Entrega de Parcial 1 de Aplicaciones Web Progresivas
+# pwa-parcial-2-dwn3bv-liuchen-alejandro
+Entrega de Parcial 2 de Aplicaciones Web Progresivas
 
 La aplicacion se trata sobre una tienda de videojuegos.
 
